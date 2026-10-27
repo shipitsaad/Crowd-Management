@@ -65,7 +65,8 @@ export default function ProtectedClientLayout({
   };
 
   return (
-    <div className="min-h-screen flex bg-[#F7F8FA]">
+    // Viewport-height shell: only <main> scrolls, so the sidebar (and Logout) and header stay in view
+    <div className="h-dvh flex overflow-hidden bg-[#F7F8FA]">
       {/* Left Sidebar (240px wide, exactly matching Figma frame 1:838) */}
       <aside className="w-[240px] bg-[#0d2a2d] text-white flex flex-col justify-between shrink-0 relative overflow-hidden z-20">
         {/* Figma Sidebar Vector Mesh Background */}

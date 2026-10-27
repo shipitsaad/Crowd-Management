@@ -22,7 +22,7 @@ import { useDemographics } from '@/hooks/useDemographics';
 import { useSocket, AlertEvent } from '@/hooks/useSocket';
 import { useNotificationStore } from '@/store/notifications';
 import { useSiteStore } from '@/store/site';
-import { getSiteDayBounds, formatTimeInTz, getHourTicksInTz } from '@/lib/date';
+import { getSiteDayBounds, formatTimeInTz, getHourTicksInTz, currentMinuteUtc } from '@/lib/date';
 import {
   CalendarIcon,
   MaleIcon,
@@ -107,9 +107,9 @@ export default function DashboardClient() {
   const activeSite = sites?.find((s) => s.siteId === activeSiteId) || sites?.[0];
 
   // Advances every minute so today's KPIs and charts refresh without a reload
-  const [referenceTime, setReferenceTime] = useState(() => Date.now());
+  const [referenceTime, setReferenceTime] = useState(currentMinuteUtc);
   useEffect(() => {
-    const id = setInterval(() => setReferenceTime(Date.now()), 60 * 1000);
+    const id = setInterval(() => setReferenceTime(currentMinuteUtc()), 60 * 1000);
     return () => clearInterval(id);
   }, []);
 

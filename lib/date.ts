@@ -1,3 +1,9 @@
+// Query windows end on a whole minute so revisiting a page within the same minute
+// reuses the TanStack Query cache instead of creating a new key
+export function currentMinuteUtc(): number {
+  return Math.floor(Date.now() / 60000) * 60000;
+}
+
 export function getSiteDayBounds(timeZone?: string, referenceTimestamp: number = Date.now()) {
   const tz = timeZone || 'UTC';
   const refDate = new Date(referenceTimestamp);

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useSites } from '@/hooks/useSites';
 import { useEntries } from '@/hooks/useEntries';
 import { useSiteStore } from '@/store/site';
-import { getSiteDayBounds, formatTime12hInTz } from '@/lib/date';
+import { getSiteDayBounds, formatTime12hInTz, currentMinuteUtc } from '@/lib/date';
 import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from '@/components/icons';
 
 
@@ -24,7 +24,7 @@ export default function EntriesClient() {
   const activeSiteId = selectedSiteId || sites?.[0]?.siteId || '';
   const activeSite = sites?.find((s) => s.siteId === activeSiteId) || sites?.[0];
 
-  const [referenceTime] = useState(() => Date.now());
+  const [referenceTime] = useState(currentMinuteUtc);
 
   // Page is keyed by site so it resets to 1 whenever the active site changes
   const [pageState, setPageState] = useState<{ siteId?: string; page: number }>({ page: 1 });
