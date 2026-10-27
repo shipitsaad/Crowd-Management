@@ -39,3 +39,19 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# MCP server configurations with secrets
+.cursor/mcp.json
+.vscode/mcp.json
+.agents/**/mcp_config.json
+.agents/mcp_config.json
+
+
+# local editor / AI agent tooling
+.agents/
+.cursor/
+.vscode/
+.claude/
+.idea/
+AGENTS.md
+CLAUDE.md
