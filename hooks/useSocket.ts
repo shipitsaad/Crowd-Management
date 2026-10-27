@@ -55,10 +55,13 @@ export function useSocket(options?: UseSocketOptions) {
 
   const onOccupancyRef = useRef(onOccupancy);
   const onAlertRef = useRef(onAlert);
+  // Read the site through a ref so switching sites filters events without reconnecting
+  const activeSiteIdRef = useRef(activeSiteId);
 
   useEffect(() => {
     onOccupancyRef.current = onOccupancy;
     onAlertRef.current = onAlert;
+    activeSiteIdRef.current = activeSiteId;
   });
 
   useEffect(() => {
@@ -80,16 +83,18 @@ export function useSocket(options?: UseSocketOptions) {
 
     // 1 & 2: Listen only to live_occupancy and alert; ignore if siteId doesn't match
     socket.on('live_occupancy', (data: LiveOccupancyEvent) => {
-      if (activeSiteId && data.siteId !== activeSiteId) return;
-      setOccupancyState({ siteId: activeSiteId, data });
+      const siteId = activeSiteIdRef.current;
+      if (siteId && data.siteId !== siteId) return;
+      setOccupancyState({ siteId, data });
       onOccupancyRef.current?.(data);
     });
 
     socket.on('alert', (data: AlertEvent) => {
-      if (activeSiteId && data.siteId !== activeSiteId) return;
+      const siteId = activeSiteIdRef.current;
+      if (siteId && data.siteId !== siteId) return;
       setAlertsState((prev) => ({
-        siteId: activeSiteId,
-        list: (prev.siteId === activeSiteId ? [data, ...prev.list] : [data]).slice(0, 20),
+        siteId,
+        list: (prev.siteId === siteId ? [data, ...prev.list] : [data]).slice(0, 20),
       }));
       onAlertRef.current?.(data);
     });
@@ -99,7 +104,7 @@ export function useSocket(options?: UseSocketOptions) {
       socketRef.current = null;
       setIsConnected(false);
     };
-  }, [token, activeSiteId]);
+  }, [token]);
 
   const latestOccupancy = useMemo(
     () => (occupancyState.siteId === activeSiteId ? occupancyState.data : null),
